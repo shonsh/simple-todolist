@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoList - Task Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>ToDoList</h1>
+            <form class="add-task-form" id="addTaskForm">
+                <div class="input-group">
+                    <input type="text" id="taskInput" class="task-input" placeholder="Enter a new task..." required
+                        aria-label="New task description">
+                    <button type="submit" class="add-button">Add Task</button>
+                </div>
+                <div class="error-message hidden" id="errorMessage" role="alert" aria-live="polite"></div>
+            </form>
+        </header>
+
+        <main class="main-content">
+            <section class="task-list-section">
+                <div class="task-list" id="taskList" role="list">
+                    <!-- Tasks will be rendered here -->
+                </div>
+                <div class="empty-state hidden" id="emptyState">
+                    <p>No tasks yet. Add your first task above!</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

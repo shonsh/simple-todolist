@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoList - Test Page</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .test-controls {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .test-controls h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .test-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background: #218838;
+        }
+        .test-results {
+            background: #e9ecef;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>TodoList - Test Page</h1>
+            
+            <div class="test-controls">
+                <h3>Test Controls</h3>
+                <button class="test-button" onclick="runBasicTests()">Run Basic Tests</button>
+                <button class="test-button" onclick="clearAllTasks()">Clear All Tasks</button>
+                <button class="test-button" onclick="addSampleTasks()">Add Sample Tasks</button>
+                <div class="test-results" id="testResults">Ready to run tests...</div>
+            </div>
+            
+            <form class="add-task-form" id="addTaskForm">
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="taskInput" 
+                        class="task-input" 
+                        placeholder="Enter a new task..."
+                        required
+                    >
+                    <button type="submit" class="add-button">Add Task</button>
+                </div>
+                <div class="error-message hidden" id="errorMessage"></div>
+            </form>
+        </header>
+
+        <main class="main-content">
+            <section class="task-list-section">
+                <div class="task-list" id="taskList"></div>
+                <div class="empty-state hidden" id="emptyState">
+                    <p>No tasks yet. Add your first task above!</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../app.js"></script>
+    
+    <script>
+        function log(message) {
+            const results = document.getElementById('testResults');
+            results.innerHTML += message + '<br>';
+            console.log(message);
+        }
+
+        function clearLog() {
+            document.getElementById('testResults').innerHTML = '';
+        }
+
+        function runBasicTests() {
+            clearLog();
+            log('🧪 Running basic functionality tests...');
+            
+            // Test 1: App initialization
+            if (todoApp) {
+                log('✅ App initialized successfully');
+            } else {
+                log('❌ App failed to initialize');
+                return;
+            }
+
+            // Test 2: Add task functionality
+            const initialCount = todoApp.tasks.length;
+            const testTaskText = 'Test Task ' + Date.now();
+            
+            document.getElementById('taskInput').value = testTaskText;
+            document.getElementById('addTaskForm').dispatchEvent(new Event('submit'));
+            
+            setTimeout(() => {
+                if (todoApp.tasks.length === initialCount + 1) {
+                    log('✅ Add task functionality works');
+                    
+                    // Test 3: Toggle task
+                    const newTask = todoApp.tasks[todoApp.tasks.length - 1];
+                    const initialCompleted = newTask.completed;
+                    todoApp.toggleTask(newTask.id);
+                    
+                    if (newTask.completed !== initialCompleted) {
+                        log('✅ Toggle task functionality works');
+                    } else {
+                        log('❌ Toggle task functionality failed');
+                    }
+                    
+                    // Test 4: Delete task
+                    const taskCountBeforeDelete = todoApp.tasks.length;
+                    todoApp.deleteTask(newTask.id);
+                    
+                    if (todoApp.tasks.length === taskCountBeforeDelete - 1) {
+                        log('✅ Delete task functionality works');
+                    } else {
+                        log('❌ Delete task functionality failed');
+                    }
+                    
+                    log('🎉 All basic tests completed!');
+                } else {
+                    log('❌ Add task functionality failed');
+                }
+            }, 100);
+        }
+
+        function clearAllTasks() {
+            todoApp.tasks = [];
+            todoApp.saveTasks();
+            todoApp.render();
+            log('🗑️ All tasks cleared');
+        }
+
+        function addSampleTasks() {
+            const sampleTasks = [
+                'Buy groceries',
+                'Walk the dog',
+                'Finish project report',
+                'Call dentist',
+                'Read a book'
+            ];
+            
+            sampleTasks.forEach((taskText, index) => {
+                setTimeout(() => {
+                    document.getElementById('taskInput').value = taskText;
+                    document.getElementById('addTaskForm').dispatchEvent(new Event('submit'));
+                }, index * 200);
+            });
+            
+            log('📝 Added sample tasks');
+        }
+
+        // Auto-run basic tests on load if no tasks exist
+        setTimeout(() => {
+            if (todoApp && todoApp.tasks.length === 0) {
+                log('🚀 Auto-running tests since no tasks exist...');
+                addSampleTasks();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

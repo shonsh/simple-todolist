@@ -1,0 +1,17 @@
+{
+  "name": "todolist-app",
+  "version": "1.0.0",
+  "description": "A simple task management application",
+  "main": "app.js",
+  "scripts": {
+    "start": "npx http-server -p 8000 -o",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "todo",
+    "task",
+    "management"
+  ],
+  "author": "",
+  "license": "MIT"
+}
